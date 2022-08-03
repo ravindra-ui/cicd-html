@@ -2,7 +2,7 @@ FROM centos:latest
 
 MAINTAINER Nravi
 
-RUN yum -y install httpd
+RUN apt-get install -y nodejs && apt-get install -y npm
 
 COPY index.html /var/www/html/
 
