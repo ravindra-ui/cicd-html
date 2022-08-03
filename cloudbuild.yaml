@@ -1,7 +1,4 @@
 steps:
-#First Clone from Google Cloud Source Repository  
-- name: 'gcr.io/cloud-builders/git'
-  args: ['clone','https://source.developers.google.com/p/${_PROJECT}/r/${_REPO_NAME}']
 
 #Build the image 
 - name: 'gcr.io/cloud-builders/docker'
@@ -11,31 +8,35 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push','gcr.io/${_PROJECT}/${_CONTAINERNAME}:${_VERSION}']
   
+#Apply deployment1
+- name: "gcr.io/cloud-builders/kubectl"
+  args: ["apply", "-f", "myapp.yaml"]
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=${_ZONE}'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=${_GKE_CLUSTER}'
+  
 #Update the container image using kubectl set
 - name: 'gcr.io/cloud-builders/kubectl'
-  args:
-  - 'set'
-  - 'image'
-  - 'deployment/${_DEPLOYMENTNAME}'
-  - '${_CONTAINERNAME}=gcr.io/${_PROJECT}/${_CONTAINERNAME}:${_VERSION}'
+  args: ['set', 'image', 'deployment/${_DEPLOYMENTNAME}', '${_CONTAINERNAME}=gcr.io/${_PROJECT}/${_CONTAINERNAME}:${_VERSION}']
+  
   env:
   - 'CLOUDSDK_COMPUTE_ZONE=${_ZONE}'
   - 'CLOUDSDK_CONTAINER_CLUSTER=${_GKE_CLUSTER}'
   
 substitutions:
-    #GCP Specific configuration. Please DON'T change anything
-    _PROJECT: AKcess-Labs
+    #GCP Specific configuration. 
+    _PROJECT: akcess-labs
     _ZONE: europe-west2-a
     _GKE_CLUSTER: akcess
     
-    #Repository Specific configuration. DevOps can change this settings
-    _DEPLOYMENTNAME: hello-world-service
-    _CONTAINERNAME: hello-world-service    
+    #Repository Specific configuration. 
+    _DEPLOYMENTNAME: myapp
+    _CONTAINERNAME: nginx  
     _REPO_NAME: cicd-html
+   # _NAMESPACENAME: test-deployment
     
     # Developers ONLY change
-    _VERSION: v1.0
+    _VERSION: v1.01
     
 options:
     substitution_option: 'ALLOW_LOOSE'
-
