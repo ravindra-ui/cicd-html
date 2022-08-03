@@ -1,14 +1,11 @@
-FROM alpine
+FROM centos:latest
 
-# Install Node and NPM
+MAINTAINER Nravi
 
-RUN npm install -g http-server
+RUN yum -y install httpd
 
-# Copy app to /src
-COPY . /src
+COPY index.html /var/www/html/
 
-WORKDIR /src
+CMD [“/usr/sbin/httpd”, “-D”, “FOREGROUND”]
 
-EXPOSE 8080
-
-ENTRYPOINT ["http-server", "-p", "8080"]
+EXPOSE 80
