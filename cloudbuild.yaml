@@ -31,7 +31,7 @@ substitutions:
     #Repository Specific configuration. DevOps can change this settings
     _DEPLOYMENTNAME: hello-world-service
     _CONTAINERNAME: hello-world-service    
-    _REPO_NAME: ci-cd-deployment
+    _REPO_NAME: cicd-html
     
     # Developers ONLY change
     _VERSION: v1.0
